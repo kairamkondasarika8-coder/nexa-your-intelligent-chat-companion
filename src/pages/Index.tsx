@@ -1,17 +1,33 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Brain, Volume2, PanelLeft } from "lucide-react";
+import { Brain, Volume2, PanelLeft, Sparkles } from "lucide-react";
 import ChatSidebar, { type ChatSession } from "@/components/ChatSidebar";
 import ChatMessage, { type Message, type Attachment } from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import TypingIndicator from "@/components/TypingIndicator";
+import ModeSelector, { type AIMode } from "@/components/ModeSelector";
 
-const MOCK_RESPONSES = [
-  "That's an interesting question! Let me think about that for a moment. Based on my analysis, I'd suggest considering multiple perspectives before making a decision.",
-  "Great point! Here's what I can tell you — modern AI systems are becoming increasingly capable of understanding nuanced context and providing relevant responses.",
-  "I've analyzed the information you provided. Here are my key observations and recommendations for moving forward.",
-  "That's a fascinating topic! The intersection of technology and creativity continues to evolve in surprising ways.",
-  "I understand your concern. Let me break this down into simpler terms and provide some actionable steps you can take.",
-];
+const MODE_RESPONSES: Record<AIMode, string[]> = {
+  study: [
+    "🎓 Great question! Let me explain this simply. Think of it like building blocks — each concept connects to the next. Here's a clear breakdown...",
+    "🎓 Let me simplify this for you. The key idea here is straightforward once you see the bigger picture...",
+    "🎓 Here's an easy way to understand this concept. Imagine you're teaching it to a friend...",
+  ],
+  coding: [
+    "💻 Here's the code solution:\n\n```javascript\nfunction solve(input) {\n  // Your logic here\n  return result;\n}\n```\n\nThis approach uses an efficient algorithm with O(n) time complexity.",
+    "💻 I found the bug! The issue is in your logic. Here's the fix with an explanation of what went wrong...",
+    "💻 Here's a clean implementation:\n\n```python\ndef solution(data):\n    return processed_data\n```\n\nLet me know if you need me to debug anything else!",
+  ],
+  brainstorm: [
+    "🧠 Love it! Here are 5 creative ideas:\n\n1. 💡 Use AI-powered personalization\n2. 🎨 Add gamification elements\n3. 🚀 Create a viral sharing feature\n4. 🌈 Build an interactive experience\n5. ⚡ Implement real-time collaboration",
+    "🧠 That's a fascinating angle! Let me brainstorm some wild ideas that could really make this stand out...",
+    "🧠 Here's an unconventional approach that nobody is doing yet — what if we combined these two ideas?",
+  ],
+  professional: [
+    "📊 Based on my analysis, I recommend the following strategic approach:\n\n**Executive Summary:** The data suggests a clear path forward with measurable KPIs and defined milestones.",
+    "📊 Here's a comprehensive breakdown:\n\n1. **Objective**: Clearly defined goals\n2. **Strategy**: Data-driven approach\n3. **Timeline**: Phased implementation\n4. **Metrics**: Measurable outcomes",
+    "📊 From a professional standpoint, the optimal solution involves a structured methodology with clear deliverables and stakeholder alignment.",
+  ],
+};
 
 const createId = () => Math.random().toString(36).slice(2, 10);
 
@@ -23,6 +39,7 @@ const Index = () => {
   const [activeSessionId, setActiveSessionId] = useState("default");
   const [messagesBySession, setMessagesBySession] = useState<Record<string, Message[]>>({});
   const [isTyping, setIsTyping] = useState(false);
+  const [mode, setMode] = useState<AIMode>("study");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const messages = messagesBySession[activeSessionId] || [];
@@ -50,7 +67,6 @@ const Index = () => {
         [activeSessionId]: [...(prev[activeSessionId] || []), userMsg],
       }));
 
-      // Update session title from first message
       if (!messagesBySession[activeSessionId]?.length && text) {
         setSessions((prev) =>
           prev.map((s) =>
@@ -59,13 +75,13 @@ const Index = () => {
         );
       }
 
-      // Mock AI response
       setIsTyping(true);
       setTimeout(() => {
+        const responses = MODE_RESPONSES[mode];
         const aiMsg: Message = {
           id: createId(),
           role: "assistant",
-          content: MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)],
+          content: responses[Math.floor(Math.random() * responses.length)],
           timestamp: new Date(),
         };
         setMessagesBySession((prev) => ({
@@ -77,13 +93,50 @@ const Index = () => {
         setIsTyping(false);
       }, 1500 + Math.random() * 1500);
     },
-    [activeSessionId, messagesBySession]
+    [activeSessionId, messagesBySession, mode]
   );
 
   const handleNewChat = () => {
     const id = createId();
     setSessions((prev) => [{ id, title: "New Chat", createdAt: new Date() }, ...prev]);
     setActiveSessionId(id);
+  };
+
+  const handlePin = (id: string) => {
+    setSessions((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, pinned: !s.pinned } : s))
+    );
+  };
+
+  const handleDelete = (id: string) => {
+    if (sessions.length <= 1) return;
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+    if (activeSessionId === id) {
+      const remaining = sessions.filter((s) => s.id !== id);
+      setActiveSessionId(remaining[0]?.id || "default");
+    }
+  };
+
+  const handleDownload = (id: string) => {
+    const msgs = messagesBySession[id] || [];
+    const text = msgs.map((m) => `[${m.role.toUpperCase()}] ${m.content}`).join("\n\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nexa-chat-${id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleShare = (id: string) => {
+    const msgs = messagesBySession[id] || [];
+    const text = msgs.map((m) => `[${m.role.toUpperCase()}] ${m.content}`).join("\n\n");
+    if (navigator.share) {
+      navigator.share({ title: "Nexa Chat", text }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text);
+    }
   };
 
   const speakText = (text: string) => {
@@ -102,42 +155,62 @@ const Index = () => {
         onNew={handleNewChat}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        onPin={handlePin}
+        onDelete={handleDelete}
+        onDownload={handleDownload}
+        onShare={handleShare}
       />
 
-      {/* Main chat area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="flex items-center gap-3 px-4 md:px-6 py-4 border-b border-border shrink-0">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden p-2 rounded-xl hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <PanelLeft className="w-5 h-5" />
-          </button>
+        <header className="flex items-center justify-between gap-3 px-4 md:px-6 py-3 border-b border-border shrink-0">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden p-2 rounded-xl hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <PanelLeft className="w-5 h-5" />
+            </button>
 
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center glow">
-              <Brain className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="font-display font-bold text-lg gradient-text leading-tight">Nexa</h1>
-              <p className="text-[11px] text-muted-foreground">AI Assistant</p>
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center glow animate-pulse-glow">
+                <Brain className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="font-display font-bold text-lg gradient-text leading-tight flex items-center gap-1">
+                  Nexa <Sparkles className="w-4 h-4 text-accent inline" />
+                </h1>
+                <p className="text-[10px] text-muted-foreground">AI Assistant • Free to use</p>
+              </div>
             </div>
           </div>
+
+          <ModeSelector mode={mode} onChange={setMode} />
         </header>
 
         {/* Messages */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-thin px-4 md:px-6 py-6 space-y-6">
           {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full text-center gap-4 animate-fade-up">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center glow-strong">
-                <Brain className="w-8 h-8 text-primary" />
+            <div className="flex flex-col items-center justify-center h-full text-center gap-5 animate-fade-up">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-primary flex items-center justify-center glow-strong animate-float">
+                <Brain className="w-10 h-10 text-primary-foreground" />
               </div>
               <div>
-                <h2 className="font-display font-bold text-xl gradient-text mb-1">Hello! I'm Nexa</h2>
-                <p className="text-sm text-muted-foreground max-w-sm">
-                  Your AI assistant. Send a message, upload files, or use your voice to start a conversation.
+                <h2 className="font-display font-bold text-2xl gradient-text mb-2">Hello! I'm Nexa ✨</h2>
+                <p className="text-sm text-muted-foreground max-w-md">
+                  Your free AI assistant. Send messages, upload files & images, use voice, or try the AI tools below!
                 </p>
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center max-w-md">
+                {["📄 Summarize a PDF", "💻 Debug my code", "🧠 Brainstorm ideas", "🌐 Translate to Telugu"].map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => handleSend(q, [])}
+                    className="px-4 py-2 rounded-xl glass text-xs text-foreground hover:bg-secondary/60 transition-all border border-transparent hover:border-primary/20"
+                  >
+                    {q}
+                  </button>
+                ))}
               </div>
             </div>
           )}
@@ -164,7 +237,7 @@ const Index = () => {
         <div className="px-4 md:px-6 pb-4 pt-2 shrink-0">
           <ChatInput onSend={handleSend} disabled={isTyping} />
           <p className="text-[10px] text-muted-foreground text-center mt-2">
-            Nexa can make mistakes. Consider checking important information.
+            Nexa AI • Free to send files, photos & messages • Share with friends ✨
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
-import { Send, Mic, MicOff, Paperclip, X, Image, FileVideo, FileText } from "lucide-react";
+import { Send, Mic, MicOff, Paperclip, X, FileVideo, FileText, Wrench } from "lucide-react";
 import type { Attachment } from "./ChatMessage";
+import AIToolsPanel from "./AIToolsPanel";
 
 interface ChatInputProps {
   onSend: (text: string, attachments: Attachment[]) => void;
@@ -12,6 +13,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isListening, setIsListening] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
 
@@ -66,6 +68,10 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleToolSelect = (prompt: string) => {
+    setText(prompt);
+  };
+
   return (
     <div
       className={`relative glass rounded-2xl p-3 transition-all ${isDragOver ? "ring-2 ring-primary glow" : ""}`}
@@ -75,9 +81,11 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
     >
       {isDragOver && (
         <div className="absolute inset-0 rounded-2xl bg-primary/5 flex items-center justify-center z-10 pointer-events-none">
-          <p className="text-primary font-medium text-sm">Drop files here</p>
+          <p className="text-primary font-medium text-sm">📎 Drop files here</p>
         </div>
       )}
+
+      <AIToolsPanel isOpen={toolsOpen} onClose={() => setToolsOpen(false)} onSelectTool={handleToolSelect} />
 
       {/* Attachment previews */}
       {attachments.length > 0 && (
@@ -89,7 +97,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
               ) : (
                 <div className="w-16 h-16 flex flex-col items-center justify-center gap-1 p-1">
                   {att.type === "video" ? (
-                    <FileVideo className="w-5 h-5 text-primary" />
+                    <FileVideo className="w-5 h-5 text-accent" />
                   ) : (
                     <FileText className="w-5 h-5 text-primary" />
                   )}
@@ -110,6 +118,14 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
       )}
 
       <div className="flex items-end gap-2">
+        <button
+          onClick={() => setToolsOpen(!toolsOpen)}
+          className={`p-2 rounded-xl transition-colors ${toolsOpen ? "bg-primary/20 text-primary" : "hover:bg-secondary/80 text-muted-foreground hover:text-foreground"}`}
+          title="AI Tools"
+        >
+          <Wrench className="w-5 h-5" />
+        </button>
+
         <button
           onClick={() => fileInputRef.current?.click()}
           className="p-2 rounded-xl hover:bg-secondary/80 transition-colors text-muted-foreground hover:text-foreground"
@@ -145,7 +161,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
           onClick={toggleVoice}
           className={`p-2 rounded-xl transition-all ${
             isListening
-              ? "bg-primary text-primary-foreground animate-pulse-glow"
+              ? "bg-gradient-accent text-primary-foreground animate-pulse-glow"
               : "hover:bg-secondary/80 text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -155,7 +171,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
         <button
           onClick={handleSubmit}
           disabled={disabled || (!text.trim() && attachments.length === 0)}
-          className="p-2 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed glow"
+          className="p-2 rounded-xl bg-gradient-primary text-primary-foreground hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed glow"
         >
           <Send className="w-5 h-5" />
         </button>
