@@ -1,9 +1,11 @@
-import { Plus, MessageSquare, PanelLeftClose, PanelLeft } from "lucide-react";
+import { Plus, MessageSquare, PanelLeftClose, PanelLeft, Pin, Download, Moon, Sun, Share2, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 export interface ChatSession {
   id: string;
   title: string;
   createdAt: Date;
+  pinned?: boolean;
 }
 
 interface ChatSidebarProps {
@@ -13,17 +15,29 @@ interface ChatSidebarProps {
   onNew: () => void;
   isOpen: boolean;
   onToggle: () => void;
+  onPin: (id: string) => void;
+  onDelete: (id: string) => void;
+  onDownload: (id: string) => void;
+  onShare: (id: string) => void;
 }
 
-const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle }: ChatSidebarProps) => {
+const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, onPin, onDelete, onDownload, onShare }: ChatSidebarProps) => {
+  const [isDark, setIsDark] = useState(true);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    document.documentElement.classList.toggle("dark");
+  };
+
+  const pinned = sessions.filter((s) => s.pinned);
+  const unpinned = sessions.filter((s) => !s.pinned);
+
   return (
     <>
-      {/* Mobile overlay */}
       {isOpen && (
         <div className="fixed inset-0 bg-background/60 z-30 md:hidden" onClick={onToggle} />
       )}
 
-      {/* Toggle button when closed (desktop) */}
       {!isOpen && (
         <button
           onClick={onToggle}
@@ -35,25 +49,34 @@ const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle }: 
 
       <aside
         className={`fixed md:relative z-40 h-full flex flex-col bg-card border-r border-border transition-all duration-300 ${
-          isOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full md:translate-x-0"
+          isOpen ? "w-72 translate-x-0" : "w-0 -translate-x-full md:translate-x-0"
         } overflow-hidden`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
-          <h2 className="font-display font-semibold text-sm text-foreground">Chat History</h2>
-          <button
-            onClick={onToggle}
-            className="p-1.5 rounded-lg hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <PanelLeftClose className="w-4 h-4" />
-          </button>
+          <h2 className="font-display font-semibold text-sm gradient-text">💬 Chats</h2>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-lg hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
+              title={isDark ? "Light mode" : "Dark mode"}
+            >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <button
+              onClick={onToggle}
+              className="p-1.5 rounded-lg hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* New chat */}
         <div className="p-3 shrink-0">
           <button
             onClick={onNew}
-            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-dashed border-border hover:border-primary/50 hover:bg-secondary/30 transition-all text-sm text-muted-foreground hover:text-foreground"
+            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl bg-gradient-primary text-primary-foreground font-medium text-sm transition-all hover:opacity-90 glow"
           >
             <Plus className="w-4 h-4" />
             New Chat
@@ -62,24 +85,109 @@ const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle }: 
 
         {/* Sessions */}
         <div className="flex-1 overflow-y-auto scrollbar-thin px-3 pb-3 space-y-1">
-          {sessions.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => onSelect(s.id)}
-              className={`w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all truncate ${
-                s.id === activeId
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:bg-secondary/40 hover:text-foreground"
-              }`}
-            >
-              <MessageSquare className="w-4 h-4 shrink-0" />
-              <span className="truncate">{s.title}</span>
-            </button>
-          ))}
+          {pinned.length > 0 && (
+            <>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 pt-2 pb-1">📌 Pinned</p>
+              {pinned.map((s) => (
+                <SessionItem
+                  key={s.id}
+                  session={s}
+                  active={s.id === activeId}
+                  onSelect={onSelect}
+                  onPin={onPin}
+                  onDelete={onDelete}
+                  onDownload={onDownload}
+                  onShare={onShare}
+                />
+              ))}
+            </>
+          )}
+
+          {unpinned.length > 0 && (
+            <>
+              {pinned.length > 0 && (
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-3 pt-3 pb-1">🕘 Recent</p>
+              )}
+              {unpinned.map((s) => (
+                <SessionItem
+                  key={s.id}
+                  session={s}
+                  active={s.id === activeId}
+                  onSelect={onSelect}
+                  onPin={onPin}
+                  onDelete={onDelete}
+                  onDownload={onDownload}
+                  onShare={onShare}
+                />
+              ))}
+            </>
+          )}
         </div>
       </aside>
     </>
   );
 };
+
+function SessionItem({
+  session: s,
+  active,
+  onSelect,
+  onPin,
+  onDelete,
+  onDownload,
+  onShare,
+}: {
+  session: ChatSession;
+  active: boolean;
+  onSelect: (id: string) => void;
+  onPin: (id: string) => void;
+  onDelete: (id: string) => void;
+  onDownload: (id: string) => void;
+  onShare: (id: string) => void;
+}) {
+  return (
+    <div
+      className={`group flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm transition-all cursor-pointer ${
+        active
+          ? "bg-secondary text-foreground border border-primary/20"
+          : "text-muted-foreground hover:bg-secondary/40 hover:text-foreground"
+      }`}
+      onClick={() => onSelect(s.id)}
+    >
+      <MessageSquare className="w-4 h-4 shrink-0" />
+      <span className="truncate flex-1">{s.title}</span>
+      <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          onClick={(e) => { e.stopPropagation(); onPin(s.id); }}
+          className={`p-1 rounded hover:bg-primary/20 ${s.pinned ? "text-primary" : ""}`}
+          title={s.pinned ? "Unpin" : "Pin"}
+        >
+          <Pin className="w-3 h-3" />
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onShare(s.id); }}
+          className="p-1 rounded hover:bg-primary/20"
+          title="Share"
+        >
+          <Share2 className="w-3 h-3" />
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onDownload(s.id); }}
+          className="p-1 rounded hover:bg-primary/20"
+          title="Download"
+        >
+          <Download className="w-3 h-3" />
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onDelete(s.id); }}
+          className="p-1 rounded hover:bg-destructive/20 text-destructive"
+          title="Delete"
+        >
+          <Trash2 className="w-3 h-3" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default ChatSidebar;
