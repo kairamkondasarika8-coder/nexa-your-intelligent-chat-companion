@@ -1,4 +1,5 @@
 import { FileText, File } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 export interface Attachment {
   type: "image" | "video" | "file";
@@ -45,7 +46,9 @@ const ChatMessage = ({ message }: { message: Message }) => {
               : "bg-ai-bubble rounded-tl-md text-foreground"
           }`}
         >
-          {message.content}
+          <div className="prose prose-sm prose-invert max-w-none">
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+          </div>
         </div>
 
         {/* Attachments */}
