@@ -5,6 +5,8 @@ import ChatMessage, { type Message, type Attachment } from "@/components/ChatMes
 import ChatInput from "@/components/ChatInput";
 import TypingIndicator from "@/components/TypingIndicator";
 import ModeSelector, { type AIMode } from "@/components/ModeSelector";
+import SettingsPanel from "@/components/SettingsPanel";
+import LoginDialog from "@/components/LoginDialog";
 
 const MODE_RESPONSES: Record<AIMode, string[]> = {
   study: [
@@ -40,6 +42,9 @@ const Index = () => {
   const [messagesBySession, setMessagesBySession] = useState<Record<string, Message[]>>({});
   const [isTyping, setIsTyping] = useState(false);
   const [mode, setMode] = useState<AIMode>("study");
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [userName, setUserName] = useState<string | undefined>();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const messages = messagesBySession[activeSessionId] || [];
@@ -159,7 +164,13 @@ const Index = () => {
         onDelete={handleDelete}
         onDownload={handleDownload}
         onShare={handleShare}
+        onSettingsOpen={() => setSettingsOpen(true)}
+        onLoginOpen={() => setLoginOpen(true)}
+        userName={userName}
       />
+
+      <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <LoginDialog isOpen={loginOpen} onClose={() => setLoginOpen(false)} onLogin={setUserName} />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
