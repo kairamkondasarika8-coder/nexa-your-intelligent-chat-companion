@@ -7,29 +7,8 @@ import TypingIndicator from "@/components/TypingIndicator";
 import ModeSelector, { type AIMode } from "@/components/ModeSelector";
 import SettingsPanel from "@/components/SettingsPanel";
 import LoginDialog from "@/components/LoginDialog";
+import { streamChat } from "@/lib/streamChat";
 
-const MODE_RESPONSES: Record<AIMode, string[]> = {
-  study: [
-    "🎓 Great question! Let me explain this simply. Think of it like building blocks — each concept connects to the next. Here's a clear breakdown...",
-    "🎓 Let me simplify this for you. The key idea here is straightforward once you see the bigger picture...",
-    "🎓 Here's an easy way to understand this concept. Imagine you're teaching it to a friend...",
-  ],
-  coding: [
-    "💻 Here's the code solution:\n\n```javascript\nfunction solve(input) {\n  // Your logic here\n  return result;\n}\n```\n\nThis approach uses an efficient algorithm with O(n) time complexity.",
-    "💻 I found the bug! The issue is in your logic. Here's the fix with an explanation of what went wrong...",
-    "💻 Here's a clean implementation:\n\n```python\ndef solution(data):\n    return processed_data\n```\n\nLet me know if you need me to debug anything else!",
-  ],
-  brainstorm: [
-    "🧠 Love it! Here are 5 creative ideas:\n\n1. 💡 Use AI-powered personalization\n2. 🎨 Add gamification elements\n3. 🚀 Create a viral sharing feature\n4. 🌈 Build an interactive experience\n5. ⚡ Implement real-time collaboration",
-    "🧠 That's a fascinating angle! Let me brainstorm some wild ideas that could really make this stand out...",
-    "🧠 Here's an unconventional approach that nobody is doing yet — what if we combined these two ideas?",
-  ],
-  professional: [
-    "📊 Based on my analysis, I recommend the following strategic approach:\n\n**Executive Summary:** The data suggests a clear path forward with measurable KPIs and defined milestones.",
-    "📊 Here's a comprehensive breakdown:\n\n1. **Objective**: Clearly defined goals\n2. **Strategy**: Data-driven approach\n3. **Timeline**: Phased implementation\n4. **Metrics**: Measurable outcomes",
-    "📊 From a professional standpoint, the optimal solution involves a structured methodology with clear deliverables and stakeholder alignment.",
-  ],
-};
 
 const createId = () => Math.random().toString(36).slice(2, 10);
 
@@ -58,7 +37,7 @@ const Index = () => {
   useEffect(scrollToBottom, [messages, isTyping, scrollToBottom]);
 
   const handleSend = useCallback(
-    (text: string, attachments: Attachment[]) => {
+    async (text: string, attachments: Attachment[]) => {
       const userMsg: Message = {
         id: createId(),
         role: "user",
@@ -81,22 +60,47 @@ const Index = () => {
       }
 
       setIsTyping(true);
-      setTimeout(() => {
-        const responses = MODE_RESPONSES[mode];
-        const aiMsg: Message = {
-          id: createId(),
-          role: "assistant",
-          content: responses[Math.floor(Math.random() * responses.length)],
-          timestamp: new Date(),
-        };
-        setMessagesBySession((prev) => ({
-          ...prev,
-          [activeSessionId]: [...(prev[activeSessionId] || []), userMsg, aiMsg].filter(
-            (m, i, arr) => arr.findIndex((x) => x.id === m.id) === i
-          ),
-        }));
+
+      const aiMsgId = createId();
+      let assistantSoFar = "";
+
+      const allMessages = [...(messagesBySession[activeSessionId] || []), userMsg];
+      const chatHistory = allMessages.map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+
+      try {
+        await streamChat({
+          messages: chatHistory,
+          mode,
+          onDelta: (chunk) => {
+            assistantSoFar += chunk;
+            setMessagesBySession((prev) => {
+              const current = prev[activeSessionId] || [];
+              const existing = current.find((m) => m.id === aiMsgId);
+              if (existing) {
+                return {
+                  ...prev,
+                  [activeSessionId]: current.map((m) =>
+                    m.id === aiMsgId ? { ...m, content: assistantSoFar } : m
+                  ),
+                };
+              }
+              return {
+                ...prev,
+                [activeSessionId]: [
+                  ...current,
+                  { id: aiMsgId, role: "assistant" as const, content: assistantSoFar, timestamp: new Date() },
+                ],
+              };
+            });
+          },
+          onDone: () => setIsTyping(false),
+        });
+      } catch {
         setIsTyping(false);
-      }, 1500 + Math.random() * 1500);
+      }
     },
     [activeSessionId, messagesBySession, mode]
   );
