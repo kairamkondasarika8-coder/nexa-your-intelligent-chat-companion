@@ -1,4 +1,4 @@
-import { Plus, MessageSquare, PanelLeftClose, PanelLeft, Pin, Download, Moon, Sun, Share2, Trash2 } from "lucide-react";
+import { Plus, MessageSquare, PanelLeftClose, PanelLeft, Pin, Download, Moon, Sun, Share2, Trash2, Settings, LogIn, User } from "lucide-react";
 import { useState } from "react";
 
 export interface ChatSession {
@@ -19,9 +19,12 @@ interface ChatSidebarProps {
   onDelete: (id: string) => void;
   onDownload: (id: string) => void;
   onShare: (id: string) => void;
+  onSettingsOpen: () => void;
+  onLoginOpen: () => void;
+  userName?: string;
 }
 
-const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, onPin, onDelete, onDownload, onShare }: ChatSidebarProps) => {
+const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, onPin, onDelete, onDownload, onShare, onSettingsOpen, onLoginOpen, userName }: ChatSidebarProps) => {
   const [isDark, setIsDark] = useState(true);
 
   const toggleTheme = () => {
@@ -121,6 +124,34 @@ const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, on
                 />
               ))}
             </>
+          )}
+        </div>
+
+        {/* Bottom: Settings & Profile */}
+        <div className="p-3 border-t border-border shrink-0 space-y-2">
+          <button
+            onClick={onSettingsOpen}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors"
+          >
+            <Settings className="w-4 h-4" />
+            Settings
+          </button>
+
+          {userName ? (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-secondary/30">
+              <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center">
+                <span className="text-xs font-bold text-primary-foreground">{userName[0].toUpperCase()}</span>
+              </div>
+              <span className="text-sm font-medium text-foreground truncate">{userName}</span>
+            </div>
+          ) : (
+            <button
+              onClick={onLoginOpen}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm bg-gradient-primary text-primary-foreground font-medium hover:opacity-90 transition-all glow"
+            >
+              <LogIn className="w-4 h-4" />
+              Login / Sign Up
+            </button>
           )}
         </div>
       </aside>
