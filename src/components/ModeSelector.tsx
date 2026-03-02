@@ -7,30 +7,31 @@ interface ModeSelectorProps {
   onChange: (mode: AIMode) => void;
 }
 
-const modes: { id: AIMode; label: string; icon: React.ElementType; color: string; emoji: string }[] = [
-  { id: "general", label: "General", icon: MessageCircle, color: "text-foreground", emoji: "💬" },
-  { id: "study", label: "Study", icon: GraduationCap, color: "text-mode-study", emoji: "🎓" },
-  { id: "coding", label: "Code", icon: Code, color: "text-mode-coding", emoji: "💻" },
-  { id: "brainstorm", label: "Brainstorm", icon: Brain, color: "text-mode-brainstorm", emoji: "🧠" },
-  { id: "professional", label: "Pro", icon: Briefcase, color: "text-mode-professional", emoji: "📊" },
+const modes: { id: AIMode; label: string; icon: React.ElementType }[] = [
+  { id: "general", label: "General", icon: MessageCircle },
+  { id: "study", label: "Study", icon: GraduationCap },
+  { id: "coding", label: "Code", icon: Code },
+  { id: "brainstorm", label: "Ideas", icon: Brain },
+  { id: "professional", label: "Pro", icon: Briefcase },
 ];
 
 const ModeSelector = ({ mode, onChange }: ModeSelectorProps) => {
   return (
-    <div className="flex gap-1 p-1 rounded-xl glass">
+    <div className="flex gap-0.5 p-1 rounded-xl bg-secondary/50 border border-border">
       {modes.map((m) => {
         const active = mode === m.id;
+        const Icon = m.icon;
         return (
           <button
             key={m.id}
             onClick={() => onChange(m.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               active
-                ? "bg-gradient-primary text-primary-foreground shadow-lg"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <span className="text-sm">{m.emoji}</span>
+            <Icon className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">{m.label}</span>
           </button>
         );
