@@ -217,7 +217,7 @@ const Index = () => {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2 justify-center max-w-md">
-                {["📄 Summarize a PDF", "💻 Debug my code", "🧠 Brainstorm ideas", "🌐 Translate to Telugu"].map((q) => (
+                {["💬 Talk to me like a human", "📄 Summarize a PDF", "💻 Debug my code", "🧠 Brainstorm ideas", "🌐 Translate to Telugu"].map((q) => (
                   <button
                     key={q}
                     onClick={() => handleSend(q, [])}
