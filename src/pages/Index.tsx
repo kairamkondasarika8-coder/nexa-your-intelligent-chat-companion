@@ -20,7 +20,7 @@ const Index = () => {
   const [activeSessionId, setActiveSessionId] = useState("default");
   const [messagesBySession, setMessagesBySession] = useState<Record<string, Message[]>>({});
   const [isTyping, setIsTyping] = useState(false);
-  const [mode, setMode] = useState<AIMode>("study");
+  const [mode, setMode] = useState<AIMode>("general");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [userName, setUserName] = useState<string | undefined>();

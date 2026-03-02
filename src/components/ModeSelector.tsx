@@ -1,6 +1,6 @@
-import { GraduationCap, Code, Brain, Briefcase } from "lucide-react";
+import { GraduationCap, Code, Brain, Briefcase, MessageCircle } from "lucide-react";
 
-export type AIMode = "study" | "coding" | "brainstorm" | "professional";
+export type AIMode = "general" | "study" | "coding" | "brainstorm" | "professional";
 
 interface ModeSelectorProps {
   mode: AIMode;
@@ -8,6 +8,7 @@ interface ModeSelectorProps {
 }
 
 const modes: { id: AIMode; label: string; icon: React.ElementType; color: string; emoji: string }[] = [
+  { id: "general", label: "General", icon: MessageCircle, color: "text-foreground", emoji: "💬" },
   { id: "study", label: "Study", icon: GraduationCap, color: "text-mode-study", emoji: "🎓" },
   { id: "coding", label: "Code", icon: Code, color: "text-mode-coding", emoji: "💻" },
   { id: "brainstorm", label: "Brainstorm", icon: Brain, color: "text-mode-brainstorm", emoji: "🧠" },

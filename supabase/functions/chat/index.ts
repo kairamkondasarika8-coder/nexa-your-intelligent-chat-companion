@@ -26,6 +26,7 @@ Your job is to answer user questions clearly and correctly.
 - Adjust your answer depending on the topic asked.`;
 
     const systemPrompts: Record<string, string> = {
+      general: baseInstructions,
       study: `${baseInstructions}\n\nYou are in Study mode. Explain topics simply and clearly, like a great teacher. Use examples and analogies. Add relevant emojis. Keep answers helpful and encouraging.`,
       coding: `${baseInstructions}\n\nYou are in Coding mode. Provide clean code solutions, debug errors, and explain programming concepts. Use code blocks with syntax highlighting. Be precise and technical.`,
       brainstorm: `${baseInstructions}\n\nYou are in Brainstorm mode. Generate innovative ideas, think outside the box, and help users explore possibilities. Be enthusiastic and inspiring. Use numbered lists for ideas.`,
