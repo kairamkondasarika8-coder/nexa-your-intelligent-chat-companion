@@ -31,7 +31,7 @@ Rules:
 
 Your responses should feel like a real chat conversation, not like an article or blog post.
 
-Tone: Friendly, professional, and human-like.`,
+Tone: Friendly, professional, and human-like.`;
 
     const systemPrompts: Record<string, string> = {
       general: baseInstructions,
