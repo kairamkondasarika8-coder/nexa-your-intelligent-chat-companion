@@ -232,16 +232,16 @@ const Index = () => {
           )}
 
           {messages.map((msg) => (
-            <div key={msg.id} className="relative group">
+            <div key={msg.id}>
               <ChatMessage message={msg} />
               {msg.role === "assistant" && (
-                <button
-                  onClick={() => speakText(msg.content)}
-                  className="absolute top-0 right-0 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-all"
-                  title="Listen"
-                >
-                  <Volume2 className="w-4 h-4" />
-                </button>
+                <div className="ml-11">
+                  <MessageActions
+                    content={msg.content}
+                    messageId={msg.id}
+                    onSpeak={speakText}
+                  />
+                </div>
               )}
             </div>
           ))}
