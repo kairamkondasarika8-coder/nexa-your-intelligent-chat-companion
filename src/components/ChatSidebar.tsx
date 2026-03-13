@@ -1,4 +1,4 @@
-import { Plus, MessageSquare, PanelLeftClose, PanelLeft, Pin, Download, Moon, Sun, Share2, Trash2, Settings, LogIn, User } from "lucide-react";
+import { Plus, MessageSquare, PanelLeftClose, PanelLeft, Pin, Download, Moon, Sun, Share2, Trash2, Settings, LogIn, User, Search, X } from "lucide-react";
 import { useState } from "react";
 
 export interface ChatSession {
