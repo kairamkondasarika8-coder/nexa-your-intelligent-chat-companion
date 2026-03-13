@@ -86,6 +86,12 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
         </div>
       )}
 
+      <ChatSuggestions
+        query={text}
+        onSelect={(s) => { setText(s); }}
+        visible={!toolsOpen && text.length >= 2}
+      />
+
       <AIToolsPanel isOpen={toolsOpen} onClose={() => setToolsOpen(false)} onSelectTool={handleToolSelect} />
 
       {/* Attachment previews */}
