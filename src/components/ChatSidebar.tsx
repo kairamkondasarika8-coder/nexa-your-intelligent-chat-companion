@@ -90,6 +90,27 @@ const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, on
           </button>
         </div>
 
+        {/* Search */}
+        <div className="px-3 pb-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search chats..."
+              className="w-full pl-8 pr-8 py-2 rounded-xl bg-secondary/30 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-secondary/60 text-muted-foreground"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Sessions */}
         <div className="flex-1 overflow-y-auto scrollbar-thin px-3 pb-3 space-y-1">
           {pinned.length > 0 &&
