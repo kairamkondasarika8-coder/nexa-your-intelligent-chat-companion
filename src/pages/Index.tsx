@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Brain, Volume2, PanelLeft, Sparkles } from "lucide-react";
+import { Brain, PanelLeft, Sparkles } from "lucide-react";
 import ChatSidebar, { type ChatSession } from "@/components/ChatSidebar";
 import ChatMessage, { type Message, type Attachment } from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
@@ -7,6 +7,7 @@ import TypingIndicator from "@/components/TypingIndicator";
 import ModeSelector, { type AIMode } from "@/components/ModeSelector";
 import SettingsPanel from "@/components/SettingsPanel";
 import LoginDialog from "@/components/LoginDialog";
+import MessageActions from "@/components/MessageActions";
 import { streamChat } from "@/lib/streamChat";
 
 
@@ -231,16 +232,16 @@ const Index = () => {
           )}
 
           {messages.map((msg) => (
-            <div key={msg.id} className="relative group">
+            <div key={msg.id}>
               <ChatMessage message={msg} />
               {msg.role === "assistant" && (
-                <button
-                  onClick={() => speakText(msg.content)}
-                  className="absolute top-0 right-0 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-all"
-                  title="Listen"
-                >
-                  <Volume2 className="w-4 h-4" />
-                </button>
+                <div className="ml-11">
+                  <MessageActions
+                    content={msg.content}
+                    messageId={msg.id}
+                    onSpeak={speakText}
+                  />
+                </div>
               )}
             </div>
           ))}

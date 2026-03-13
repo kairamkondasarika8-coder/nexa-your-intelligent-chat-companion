@@ -1,4 +1,4 @@
-import { Plus, MessageSquare, PanelLeftClose, PanelLeft, Pin, Download, Moon, Sun, Share2, Trash2, Settings, LogIn, User } from "lucide-react";
+import { Plus, MessageSquare, PanelLeftClose, PanelLeft, Pin, Download, Moon, Sun, Share2, Trash2, Settings, LogIn, User, Search, X } from "lucide-react";
 import { useState } from "react";
 
 export interface ChatSession {
@@ -26,14 +26,18 @@ interface ChatSidebarProps {
 
 const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, onPin, onDelete, onDownload, onShare, onSettingsOpen, onLoginOpen, userName }: ChatSidebarProps) => {
   const [isDark, setIsDark] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleTheme = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle("dark");
   };
 
-  const pinned = sessions.filter((s) => s.pinned);
-  const unpinned = sessions.filter((s) => !s.pinned);
+  const filtered = sessions.filter((s) =>
+    s.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const pinned = filtered.filter((s) => s.pinned);
+  const unpinned = filtered.filter((s) => !s.pinned);
 
   return (
     <>
@@ -84,6 +88,27 @@ const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, on
             <Plus className="w-4 h-4" />
             New Chat
           </button>
+        </div>
+
+        {/* Search */}
+        <div className="px-3 pb-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search chats..."
+              className="w-full pl-8 pr-8 py-2 rounded-xl bg-secondary/30 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-secondary/60 text-muted-foreground"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Sessions */}

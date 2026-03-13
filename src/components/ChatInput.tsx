@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { Send, Mic, MicOff, Paperclip, X, FileVideo, FileText, Wrench } from "lucide-react";
 import type { Attachment } from "./ChatMessage";
 import AIToolsPanel from "./AIToolsPanel";
+import ChatSuggestions from "./ChatSuggestions";
 
 interface ChatInputProps {
   onSend: (text: string, attachments: Attachment[]) => void;
@@ -84,6 +85,12 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
           <p className="text-primary font-medium text-sm">📎 Drop files here</p>
         </div>
       )}
+
+      <ChatSuggestions
+        query={text}
+        onSelect={(s) => { setText(s); }}
+        visible={!toolsOpen && text.length >= 2}
+      />
 
       <AIToolsPanel isOpen={toolsOpen} onClose={() => setToolsOpen(false)} onSelectTool={handleToolSelect} />
 
