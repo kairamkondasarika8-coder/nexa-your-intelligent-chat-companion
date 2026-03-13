@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Brain, Volume2, PanelLeft, Sparkles } from "lucide-react";
+import { Brain, PanelLeft, Sparkles } from "lucide-react";
 import ChatSidebar, { type ChatSession } from "@/components/ChatSidebar";
 import ChatMessage, { type Message, type Attachment } from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
@@ -7,6 +7,7 @@ import TypingIndicator from "@/components/TypingIndicator";
 import ModeSelector, { type AIMode } from "@/components/ModeSelector";
 import SettingsPanel from "@/components/SettingsPanel";
 import LoginDialog from "@/components/LoginDialog";
+import MessageActions from "@/components/MessageActions";
 import { streamChat } from "@/lib/streamChat";
 
 
