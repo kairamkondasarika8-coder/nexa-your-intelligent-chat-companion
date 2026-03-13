@@ -26,14 +26,18 @@ interface ChatSidebarProps {
 
 const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, onPin, onDelete, onDownload, onShare, onSettingsOpen, onLoginOpen, userName }: ChatSidebarProps) => {
   const [isDark, setIsDark] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleTheme = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle("dark");
   };
 
-  const pinned = sessions.filter((s) => s.pinned);
-  const unpinned = sessions.filter((s) => !s.pinned);
+  const filtered = sessions.filter((s) =>
+    s.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const pinned = filtered.filter((s) => s.pinned);
+  const unpinned = filtered.filter((s) => !s.pinned);
 
   return (
     <>
