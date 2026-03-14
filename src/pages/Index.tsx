@@ -194,7 +194,7 @@ const Index = () => {
               </div>
               <div>
                 <h1 className="font-display font-bold text-lg gradient-text leading-tight flex items-center gap-1">
-                  Nexa <Sparkles className="w-4 h-4 text-accent-foreground inline" />
+                  Nexa AI <Sparkles className="w-4 h-4 text-accent-foreground inline" />
                 </h1>
                 <p className="text-[10px] text-muted-foreground/70">AI Assistant • Free to use</p>
               </div>
