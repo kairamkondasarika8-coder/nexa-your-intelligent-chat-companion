@@ -178,9 +178,9 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
         <button
           onClick={handleSubmit}
           disabled={disabled || (!text.trim() && attachments.length === 0)}
-          className="p-2 rounded-xl bg-gradient-primary text-primary-foreground hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed glow"
+          className="w-10 h-10 rounded-full bg-gradient-primary text-primary-foreground hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed glow-send hover:glow-strong flex items-center justify-center shrink-0"
         >
-          <Send className="w-5 h-5" />
+          <Send className="w-4 h-4" />
         </button>
       </div>
     </div>

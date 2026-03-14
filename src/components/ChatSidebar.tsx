@@ -55,7 +55,7 @@ const ChatSidebar = ({ sessions, activeId, onSelect, onNew, isOpen, onToggle, on
       }
 
       <aside
-        className={`fixed md:relative z-40 h-full flex flex-col bg-card border-r border-border transition-all duration-300 ${
+        className={`fixed md:relative z-40 h-full flex flex-col glass-strong border-r border-border/30 transition-all duration-300 ${
         isOpen ? "w-72 translate-x-0" : "w-0 -translate-x-full md:translate-x-0"} overflow-hidden`
         }>
         

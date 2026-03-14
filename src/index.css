@@ -155,8 +155,16 @@
 @layer utilities {
   .glass {
     background: var(--gradient-glass);
-    backdrop-filter: blur(16px);
-    border: 1px solid hsl(var(--border));
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid hsl(var(--border) / 0.5);
+    box-shadow: var(--shadow-glass);
+  }
+
+  .glass-strong {
+    background: var(--gradient-glass-strong);
+    backdrop-filter: blur(24px) saturate(1.3);
+    border: 1px solid hsl(var(--border) / 0.6);
+    box-shadow: var(--shadow-glass), var(--glow-primary);
   }
 
   .glow {
@@ -169,6 +177,10 @@
 
   .glow-accent {
     box-shadow: var(--glow-accent);
+  }
+
+  .glow-send {
+    box-shadow: var(--glow-send);
   }
 
   .gradient-text {
