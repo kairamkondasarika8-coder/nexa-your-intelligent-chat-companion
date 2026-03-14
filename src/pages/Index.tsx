@@ -179,7 +179,7 @@ const Index = () => {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="flex items-center justify-between gap-3 px-4 md:px-6 py-3 border-b border-border shrink-0">
+        <header className="flex items-center justify-between gap-3 px-4 md:px-6 py-3 border-b border-border/50 shrink-0 glass">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -189,14 +189,14 @@ const Index = () => {
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-primary flex items-center justify-center glow animate-pulse-glow">
+              <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center glow-strong animate-pulse-glow">
                 <Brain className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
                 <h1 className="font-display font-bold text-lg gradient-text leading-tight flex items-center gap-1">
-                  Nexa <Sparkles className="w-4 h-4 text-accent inline" />
+                  Nexa <Sparkles className="w-4 h-4 text-accent-foreground inline" />
                 </h1>
-                <p className="text-[10px] text-muted-foreground">AI Assistant • Free to use</p>
+                <p className="text-[10px] text-muted-foreground/70">AI Assistant • Free to use</p>
               </div>
             </div>
           </div>
