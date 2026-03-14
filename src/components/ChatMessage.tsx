@@ -48,7 +48,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
               : "glass-strong rounded-tl-md text-foreground"
           }`}
         >
-          <div className="prose prose-sm prose-invert max-w-none [&_h1]:text-lg [&_h1]:font-display [&_h1]:font-bold [&_h1]:gradient-text [&_h2]:text-base [&_h2]:font-display [&_h2]:font-semibold [&_h2]:text-primary [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-accent-foreground [&_strong]:text-primary-foreground [&_code]:bg-secondary/50 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:text-accent-foreground">
+          <div className="prose prose-sm prose-invert max-w-none [&_h1]:text-lg [&_h1]:font-display [&_h1]:font-bold [&_h1]:text-[#FFFFFF] [&_h2]:text-base [&_h2]:font-display [&_h2]:font-semibold [&_h2]:text-[#FFFFFF] [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-[#FFFFFF] [&_h4]:text-sm [&_h4]:font-semibold [&_h4]:text-[#FFFFFF] [&_h5]:text-sm [&_h5]:font-semibold [&_h5]:text-[#FFFFFF] [&_h6]:text-xs [&_h6]:font-semibold [&_h6]:text-[#FFFFFF] [&_strong]:text-primary-foreground [&_code]:bg-secondary/50 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:text-accent-foreground">
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </div>
         </div>
