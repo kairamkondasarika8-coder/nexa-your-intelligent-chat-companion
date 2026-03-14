@@ -207,22 +207,25 @@ const Index = () => {
         {/* Messages */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-thin px-4 md:px-6 py-6 space-y-6">
           {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full text-center gap-5 animate-fade-up">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-primary flex items-center justify-center glow-strong animate-float">
-                <Brain className="w-10 h-10 text-primary-foreground" />
+            <div className="flex flex-col items-center justify-center h-full text-center gap-6 animate-fade-up">
+              <div className="relative">
+                <div className="w-24 h-24 rounded-2xl bg-gradient-primary flex items-center justify-center glow-strong animate-float">
+                  <Brain className="w-12 h-12 text-primary-foreground" />
+                </div>
+                <div className="absolute -inset-4 rounded-3xl bg-primary/5 blur-2xl -z-10 animate-pulse-glow" />
               </div>
               <div>
-                <h2 className="font-display font-bold text-2xl gradient-text mb-2">Hello! I'm Nexa ✨</h2>
-                <p className="text-sm text-muted-foreground max-w-md">
+                <h2 className="font-display font-bold text-3xl gradient-text mb-2">Hello! I'm Nexa ✨</h2>
+                <p className="text-sm text-muted-foreground/80 max-w-md">
                   Your free AI assistant. Send messages, upload files & images, use voice, or try the AI tools below!
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2 justify-center max-w-md">
+              <div className="flex flex-wrap gap-2.5 justify-center max-w-lg">
                 {["💬 Talk to me like a human", "📄 Summarize a PDF", "💻 Debug my code", "🧠 Brainstorm ideas", "🌐 Translate to Telugu"].map((q) => (
                   <button
                     key={q}
                     onClick={() => handleSend(q, [])}
-                    className="px-4 py-2 rounded-xl glass text-xs text-foreground hover:bg-secondary/60 transition-all border border-transparent hover:border-primary/20"
+                    className="px-4 py-2.5 rounded-xl glass text-xs text-foreground hover:glass-strong transition-all border border-transparent hover:border-primary/20 hover:glow hover-scale"
                   >
                     {q}
                   </button>
