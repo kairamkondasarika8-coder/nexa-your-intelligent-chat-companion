@@ -75,7 +75,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   return (
     <div
-      className={`relative glass rounded-2xl p-3 transition-all ${isDragOver ? "ring-2 ring-primary glow" : ""}`}
+      className={`relative glass-strong rounded-2xl p-3 transition-all ${isDragOver ? "ring-2 ring-primary glow-strong" : ""}`}
       onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
       onDragLeave={() => setIsDragOver(false)}
       onDrop={handleDrop}
