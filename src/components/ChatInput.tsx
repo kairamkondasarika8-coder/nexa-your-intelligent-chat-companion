@@ -75,7 +75,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   return (
     <div
-      className={`relative glass rounded-2xl p-3 transition-all ${isDragOver ? "ring-2 ring-primary glow" : ""}`}
+      className={`relative glass-strong rounded-2xl p-3 transition-all ${isDragOver ? "ring-2 ring-primary glow-strong" : ""}`}
       onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
       onDragLeave={() => setIsDragOver(false)}
       onDrop={handleDrop}
@@ -178,9 +178,9 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
         <button
           onClick={handleSubmit}
           disabled={disabled || (!text.trim() && attachments.length === 0)}
-          className="p-2 rounded-xl bg-gradient-primary text-primary-foreground hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed glow"
+          className="w-10 h-10 rounded-full bg-gradient-primary text-primary-foreground hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed glow-send hover:glow-strong flex items-center justify-center shrink-0"
         >
-          <Send className="w-5 h-5" />
+          <Send className="w-4 h-4" />
         </button>
       </div>
     </div>
