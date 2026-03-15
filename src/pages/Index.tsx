@@ -178,6 +178,7 @@ const Index = () => {
 
       <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <LoginDialog isOpen={loginOpen} onClose={() => setLoginOpen(false)} onLogin={setUserName} />
+      <PPTMaker isOpen={pptMakerOpen} onClose={() => setPptMakerOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
