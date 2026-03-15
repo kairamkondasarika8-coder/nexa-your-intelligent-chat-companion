@@ -25,6 +25,7 @@ const Index = () => {
   const [mode, setMode] = useState<AIMode>("general");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [pptMakerOpen, setPptMakerOpen] = useState(false);
   const [userName, setUserName] = useState<string | undefined>();
   const scrollRef = useRef<HTMLDivElement>(null);
 
