@@ -8,6 +8,7 @@ import ModeSelector, { type AIMode } from "@/components/ModeSelector";
 import SettingsPanel from "@/components/SettingsPanel";
 import LoginDialog from "@/components/LoginDialog";
 import MessageActions from "@/components/MessageActions";
+import PPTMaker from "@/components/PPTMaker";
 import { streamChat } from "@/lib/streamChat";
 
 
