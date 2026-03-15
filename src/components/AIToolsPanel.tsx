@@ -1,22 +1,37 @@
-import { FileText, Bug, BookOpen, Image, Lightbulb, Languages, Share2, X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface AIToolsPanelProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectTool: (prompt: string) => void;
+  onOpenPPTMaker?: () => void;
 }
 
 const tools = [
-  { icon: FileText, label: "Resume Generator", emoji: "📄", prompt: "Help me create a professional resume. Ask me about my experience, skills, and education." },
-  { icon: Bug, label: "Code Debugger", emoji: "🐛", prompt: "I need help debugging code. Please share the code and I'll find and fix the errors." },
-  { icon: BookOpen, label: "PDF Summarizer", emoji: "📑", prompt: "Upload a PDF or paste text and I'll provide a concise summary with key points." },
-  { icon: Image, label: "Image Captioner", emoji: "🖼️", prompt: "Upload an image and I'll generate a descriptive caption for it." },
-  { icon: Lightbulb, label: "Idea Generator", emoji: "💡", prompt: "Tell me a topic and I'll brainstorm creative ideas for you!" },
-  { icon: Languages, label: "Telugu Translator", emoji: "🌐", prompt: "I'll translate between Telugu (in English letters / Romanized) and English. Type any text to translate!" },
+  { label: "PPT Maker", emoji: "📊", prompt: "__PPT_MAKER__", highlight: true },
+  { label: "Resume Builder", emoji: "📝", prompt: "Help me create a professional resume. Ask me about my experience, skills, and education, then generate a well-formatted resume." },
+  { label: "Notes Generator", emoji: "📚", prompt: "Generate detailed study notes for me. Ask me the topic and whether I need short notes, 5-mark answers, or 10-mark answers with proper headings." },
+  { label: "Code Generator", emoji: "💻", prompt: "I need code for a project. Ask me what programming language (Python, Java, C, HTML, etc.) and what functionality I need, then generate clean code." },
+  { label: "Assignment Writer", emoji: "📄", prompt: "Help me write a well-structured assignment answer. Ask me the question and mark allocation (2, 5, 10, or 15 marks) and generate an exam-ready answer." },
+  { label: "Translator", emoji: "🌍", prompt: "I'll translate between languages for you. Type any text and tell me the source and target language (e.g., Telugu → English, English → Hindi)." },
+  { label: "Image Generator", emoji: "🎨", prompt: "Describe the image you want to generate. I'll create a detailed AI image prompt and help you visualize it." },
+  { label: "Website Idea Generator", emoji: "🌐", prompt: "Tell me your field or interest and I'll generate website project ideas with features, technologies, and implementation plan." },
+  { label: "Study Planner", emoji: "📅", prompt: "Help me create a daily study plan. Tell me your subjects, available hours, and exam dates, and I'll create a structured schedule." },
+  { label: "Project Idea Generator", emoji: "💡", prompt: "Tell me your field (AI, Web Development, ML, IoT, etc.) and I'll generate innovative project ideas with explanations and tech stacks." },
 ];
 
-const AIToolsPanel = ({ isOpen, onClose, onSelectTool }: AIToolsPanelProps) => {
+const AIToolsPanel = ({ isOpen, onClose, onSelectTool, onOpenPPTMaker }: AIToolsPanelProps) => {
   if (!isOpen) return null;
+
+  const handleClick = (tool: typeof tools[0]) => {
+    if (tool.prompt === "__PPT_MAKER__" && onOpenPPTMaker) {
+      onOpenPPTMaker();
+      onClose();
+    } else {
+      onSelectTool(tool.prompt);
+      onClose();
+    }
+  };
 
   return (
     <div className="absolute bottom-full left-0 right-0 mb-2 glass rounded-2xl p-4 animate-fade-up z-20">
@@ -26,15 +41,19 @@ const AIToolsPanel = ({ isOpen, onClose, onSelectTool }: AIToolsPanelProps) => {
           <X className="w-4 h-4" />
         </button>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
         {tools.map((tool) => (
           <button
             key={tool.label}
-            onClick={() => { onSelectTool(tool.prompt); onClose(); }}
-            className="flex items-center gap-2 p-3 rounded-xl hover:bg-secondary/60 transition-all text-left group border border-transparent hover:border-primary/20"
+            onClick={() => handleClick(tool)}
+            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all text-center group border ${
+              tool.highlight
+                ? "border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 glow"
+                : "border-transparent hover:bg-secondary/60 hover:border-primary/20"
+            }`}
           >
-            <span className="text-lg">{tool.emoji}</span>
-            <span className="text-xs font-medium text-foreground group-hover:text-primary transition-colors">
+            <span className="text-2xl">{tool.emoji}</span>
+            <span className="text-[10px] font-medium text-foreground group-hover:text-primary transition-colors leading-tight">
               {tool.label}
             </span>
           </button>

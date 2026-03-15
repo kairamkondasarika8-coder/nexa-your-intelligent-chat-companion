@@ -8,6 +8,7 @@ import ModeSelector, { type AIMode } from "@/components/ModeSelector";
 import SettingsPanel from "@/components/SettingsPanel";
 import LoginDialog from "@/components/LoginDialog";
 import MessageActions from "@/components/MessageActions";
+import PPTMaker from "@/components/PPTMaker";
 import { streamChat } from "@/lib/streamChat";
 
 
@@ -24,6 +25,7 @@ const Index = () => {
   const [mode, setMode] = useState<AIMode>("general");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [pptMakerOpen, setPptMakerOpen] = useState(false);
   const [userName, setUserName] = useState<string | undefined>();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -176,6 +178,7 @@ const Index = () => {
 
       <SettingsPanel isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <LoginDialog isOpen={loginOpen} onClose={() => setLoginOpen(false)} onLogin={setUserName} />
+      <PPTMaker isOpen={pptMakerOpen} onClose={() => setPptMakerOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
@@ -254,7 +257,7 @@ const Index = () => {
 
         {/* Input */}
         <div className="px-4 md:px-6 pb-4 pt-2 shrink-0">
-          <ChatInput onSend={handleSend} disabled={isTyping} />
+          <ChatInput onSend={handleSend} disabled={isTyping} onOpenPPTMaker={() => setPptMakerOpen(true)} />
           <p className="text-[10px] text-muted-foreground/60 text-center mt-2">
             Nexa AI © 2026
           </p>

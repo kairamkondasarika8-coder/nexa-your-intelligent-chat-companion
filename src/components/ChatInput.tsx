@@ -7,9 +7,10 @@ import ChatSuggestions from "./ChatSuggestions";
 interface ChatInputProps {
   onSend: (text: string, attachments: Attachment[]) => void;
   disabled?: boolean;
+  onOpenPPTMaker?: () => void;
 }
 
-const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
+const ChatInput = ({ onSend, disabled, onOpenPPTMaker }: ChatInputProps) => {
   const [text, setText] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isListening, setIsListening] = useState(false);
@@ -92,7 +93,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
         visible={!toolsOpen && text.length >= 2}
       />
 
-      <AIToolsPanel isOpen={toolsOpen} onClose={() => setToolsOpen(false)} onSelectTool={handleToolSelect} />
+      <AIToolsPanel isOpen={toolsOpen} onClose={() => setToolsOpen(false)} onSelectTool={handleToolSelect} onOpenPPTMaker={onOpenPPTMaker} />
 
       {/* Attachment previews */}
       {attachments.length > 0 && (
