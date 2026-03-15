@@ -257,7 +257,7 @@ const Index = () => {
 
         {/* Input */}
         <div className="px-4 md:px-6 pb-4 pt-2 shrink-0">
-          <ChatInput onSend={handleSend} disabled={isTyping} />
+          <ChatInput onSend={handleSend} disabled={isTyping} onOpenPPTMaker={() => setPptMakerOpen(true)} />
           <p className="text-[10px] text-muted-foreground/60 text-center mt-2">
             Nexa AI © 2026
           </p>
