@@ -155,13 +155,13 @@ export default {
   					transform: 'translateX(0)'
   				}
   			},
-  			'pulse-glow': {
-  				'0%, 100%': {
-  					boxShadow: '0 0 20px hsl(260 85% 65% / 0.15)'
-  				},
-  				'50%': {
-  					boxShadow: '0 0 50px hsl(260 85% 65% / 0.35)'
-  				}
+			'pulse-glow': {
+				'0%, 100%': {
+					boxShadow: '0 0 20px hsl(199 89% 60% / 0.15)'
+				},
+				'50%': {
+					boxShadow: '0 0 50px hsl(199 89% 60% / 0.35)'
+				}
   			},
   			float: {
   				'0%, 100%': {
