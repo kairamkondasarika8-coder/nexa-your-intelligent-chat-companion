@@ -93,7 +93,7 @@ const ChatInput = ({ onSend, disabled, onOpenPPTMaker }: ChatInputProps) => {
         visible={!toolsOpen && text.length >= 2}
       />
 
-      <AIToolsPanel isOpen={toolsOpen} onClose={() => setToolsOpen(false)} onSelectTool={handleToolSelect} />
+      <AIToolsPanel isOpen={toolsOpen} onClose={() => setToolsOpen(false)} onSelectTool={handleToolSelect} onOpenPPTMaker={onOpenPPTMaker} />
 
       {/* Attachment previews */}
       {attachments.length > 0 && (
