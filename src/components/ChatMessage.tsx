@@ -48,7 +48,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
               : "glass-strong rounded-tl-md text-foreground"
           }`}
         >
-          <div className="prose prose-sm prose-invert max-w-none [&_h1]:text-xl [&_h1]:font-display [&_h1]:font-extrabold [&_h1]:text-[#E9D5FF] [&_h1]:drop-shadow-[0_0_8px_rgba(168,85,247,0.4)] [&_h2]:text-lg [&_h2]:font-display [&_h2]:font-bold [&_h2]:text-[#DDD6FE] [&_h2]:drop-shadow-[0_0_6px_rgba(139,92,246,0.3)] [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-[#D8B4FE] [&_h4]:text-sm [&_h4]:font-bold [&_h4]:text-[#C4B5FD] [&_h5]:text-sm [&_h5]:font-bold [&_h5]:text-[#A78BFA] [&_h6]:text-xs [&_h6]:font-bold [&_h6]:text-[#8B5CF6] [&_strong]:text-[#F3E8FF] [&_strong]:font-bold [&_code]:bg-secondary/50 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:text-[#E9D5FF]">
+          <div className="prose prose-sm prose-invert max-w-none [&_h1]:text-xl [&_h1]:font-display [&_h1]:font-extrabold [&_h1]:text-primary [&_h1]:drop-shadow-[0_0_8px_hsl(199_89%_60%/0.4)] [&_h2]:text-lg [&_h2]:font-display [&_h2]:font-bold [&_h2]:text-primary/90 [&_h2]:drop-shadow-[0_0_6px_hsl(199_89%_60%/0.3)] [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-primary/80 [&_h4]:text-sm [&_h4]:font-bold [&_h4]:text-primary/70 [&_h5]:text-sm [&_h5]:font-bold [&_h5]:text-primary/60 [&_h6]:text-xs [&_h6]:font-bold [&_h6]:text-primary/50 [&_strong]:text-foreground [&_strong]:font-bold [&_code]:bg-secondary/50 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:text-primary/80">
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </div>
         </div>
